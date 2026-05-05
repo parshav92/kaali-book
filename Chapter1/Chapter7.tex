@@ -1,0 +1,72 @@
+
+\chapter[Testing]{Testing}{Testing}\label{Test}
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\bigcirc}$ \rule{0.49\textwidth}{0.75pt}\\
+In Trustchain testing is essential to making sure that the system works safely, reliably and as expected by all parts. Given the sensitivity of identity verification by the platform, extensive testing is necessary to confirm data integrity, access control mechanisms and general system behavior. The aim of the testing process is to detect problems in the initial stages and verify that each module is functioning properly in various conditions.
+
+Tests are done at various levels such as frontend, backend and blockchain interactions. Functional testing is conducted to test user flows like registration, document upload, verification requests and access control. Integration testing is the method that promotes the seamless interaction of the parts, such as React frontend, Node.js backend, IPFS storage and smart contracts that are stored on the blockchain.
+
+Automated testing of user interface workflows, end to end scenarios are done through the katalon studio. It assists in authentication of user behaviors, form submissions and system replies. Postman is widely applicable in API testing where API endpoints are given tests to determine their ability to handle requests accurately with errors and thus reliably communicate between the components of the system.
+
+As well, there is testing of cryptographic algorithms like hashing and proof verification. Testing of smart contracts is done to verify proper implementation of access control and verification logic. This holistic solution assures TrustChain of security, performance and reliability in real world deployment scenarios.
+\\
+\noindent
+
+\section{Test Cases}
+
+
+
+\renewcommand{\arraystretch}{1.1}
+\begin{center}
+\textbf{Test Cases Overview}
+\end{center}
+
+\begin{longtable}{|p{1.1cm}|p{2cm}|p{2.5cm}|p{3cm}|p{3cm}|}
+\hline
+\textbf{Test Case ID} & \textbf{Feature} & \textbf{Test Scenario} & \textbf{Test Steps} & \textbf{Expected Result} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{Test Case ID} & \textbf{Feature} & \textbf{Test Scenario} & \textbf{Test Steps} & \textbf{Expected Result} \\
+\hline
+\endhead
+
+\hline \multicolumn{5}{r}{\emph{Continued on next page}} \\
+\endfoot
+
+\hline
+\endlastfoot
+
+TC01 & Wallet Connection & Validate wallet connection and role selection & 1. Click connect wallet 2. Select role & Wallet connects and role selected. \\
+\hline
+TC02 & User Registration & Validate user registration with details & 1. Enter name email guardians 2. Submit form & User registered successfully. \\
+\hline
+TC03 & User Login & Validate login using wallet authentication & 1. Click login 2. Authenticate wallet & User logged in dashboard displayed. \\
+\hline
+TC04 & Add Credential & Validate adding new credential & 1. Enter details 2. Upload document & Credential added successfully. \\
+\hline
+TC05 & IPFS Storage & Validate document storage on IPFS & 1. Upload document 2. Submit data & Document stored hash generated. \\
+\hline
+TC06 & Hash Generation & Validate credential hash generation & 1. Upload credential 2. Process hashing & Secure hash generated successfully. \\
+\hline
+TC07 & View Credentials & Validate viewing stored credentials & 1. Open credentials 2. View list & All credentials displayed correctly. \\
+\hline
+TC08 & Request Handling & Validate receiving verification requests & 1. Open sharing tab 2. View requests & Requester and hashes displayed. \\
+\hline
+TC09 & Grant Access & Validate granting access to hash & 1. Select request 2. Click grant & Access granted successfully recorded. \\
+\hline
+TC10 & Revoke Access & Validate revoking granted access & 1. Select request 2. Click revoke & Access revoked successfully updated. \\
+\hline
+TC11 & Role Selection & Validate switching user roles & 1. Select role 2. Confirm action & Interface updates based on role. \\
+\hline
+TC12 & Data Privacy & Validate no raw document exposure & 1. Share credential 2. Verify output & Only hash shared not document. \\
+\hline
+TC13 & Smart Contract & Validate blockchain transaction execution & 1. Perform action 2. Confirm transaction & Transaction recorded on blockchain. \\
+\hline
+\end{longtable}
+
+\rule{0.49\textwidth}{0.75pt} $_{\bigcirc}$ \rule{0.49\textwidth}{0.75pt}\\
+
+
+

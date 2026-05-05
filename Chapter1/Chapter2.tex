@@ -1,0 +1,150 @@
+
+
+\chapter[Literature Review]{Literature Review}{Literature Review}\label{lit}
+\noindent
+\rule{0.49\textwidth}{0.75pt} $_{\bigcirc}$ \rule{0.49\textwidth}{0.75pt}\\
+
+\begingroup
+\linespread{0.8}\selectfont
+\section{Securing and Ensuring the Confidentiality of Medical Data in the Era of Decentralized Technologies: A Blockchain and Self Sovereign Identity Based Approach}
+\endgroup
+In this paper, a decentralized architecture is discussed in which blockchain and Self Sovereign Identity are integrated to ensure the safety of sensitive medical records. It is aimed at providing users with complete control over their identity through the creation of Decentralized Identifiers (based on cryptographic keys) and associating them with verifiable credentials. The system uses IPFS to store the medical data, and the blockchain ensures integrity by storing the hash values, ensuring security and scalability[1].
+
+Role Based Access Control is also incorporated in the proposed model to control the interaction of various stakeholders to the system. Ethereium smart contracts are used to perform authentication and enforce access permissions. Securing communication and verification of identity are based on advanced cryptographic methods like EdDSA and HMAC SHA512. This makes sure that only the authorized parties can access particular data depending on the roles which have been defined [2].
+
+Although well designed, the system still leaves actual data to authorized users when accessing it. It is also very reliant on off chain elements that can bring about latency and reliability issues. Moreover, the interoperability with other existing systems and the user experience are also the areas, which should be improved further.
+
+TrustChain is pursuing a new strategy of maintaining privacy of data rather than simply sharing encrypted data. It relies on what is known as Zero Knowledge Proofs to make sure that information is genuine without necessarily presenting any personal information. This is a solution to a large issue with the existing system where even individuals who are permitted to view the data may still view excess information. Using TrustChain, authorized users have no ability to see the raw identity data; therefore, it is much safer. This is a large move towards safeguarding the personal information of people.
+
+Moreover, TrustChain enhances user control with access revocation and time based permissions and decentralized storage with IPFS. It uses ZK STARK based verification along with blockchain smart contracts to develop a system in which trust is built on top of proofs rather than the exchange of data, being more in line with the real world privacy needs.\\
+
+% \begingroup
+% \linespread{0.8}\selectfont
+% \section{Patients need emotional support: Managing physician disclosure information to attract more patients}
+% \endgroup
+% This research paper investigates the emotional needs of patients in online medical environments and emphasizes the importance of managing physician disclosure information. The study argues that beyond factual credentials and technical expertise, patients respond positively to emotional cues, empathy, and transparency presented on physicians’ profiles. The paper provides empirical evidence that shows how emotionally resonant and personally tailored physician profiles can enhance patient trust, improve engagement, and influence consultation behavior.
+
+% The authors highlight that when physicians disclose information such as their communication style, experience with similar patients, or even non-clinical values (e.g., compassion, availability), it results in stronger physician–patient rapport and increases the likelihood of patients choosing that physician. They also explore how emotionally aware content influences the psychological comfort of users, especially in online settings where in-person reassurance is absent.
+
+% However, the limitations of this study are rooted in its scope. While it identifies the value of emotional design and profile enhancement, it doesn't propose or test any technological solution to standardize or automate this process. There is also no discussion of data privacy, authenticity, or the possibility of manipulated or misleading self-disclosures, which could misguide vulnerable patients.
+
+% MedChain incorporates these insights by designing doctor profiles that are not only comprehensive but also verified and secured through blockchain. Physicians can include personalized and emotionally resonant information, such as patient care philosophy and communication tone, while the platform ensures this information is genuine and tamper-proof. Additionally, MedChain's AI-driven recommendation engine considers both medical expertise and patient feedback to match patients with doctors who align with their emotional and medical preferences. This helps build trust while ensuring integrity in communication.
+
+% Furthermore, by integrating interactive chatbot consultations and a forum for community engagement, MedChain provides patients with emotional support mechanisms that go beyond profile reading—something the paper identifies as crucial but does not address with implementation
+
+
+
+% This paper focuses on how word-of-mouth (WOM), especially patient-generated reviews and shared experiences in online health communities, affects the selection of physicians. It distinguishes between evaluative WOM (e.g., star ratings, thank-you notes) and experiential WOM (e.g., detailed narratives of care), concluding that experiential WOM has a stronger psychological impact on patients. The findings show that detailed and emotionally resonant patient stories are more influential in guiding physician selection than generic ratings. Moreover, the paper highlights the growing reliance on social proof, where patients use the shared experiences of others to reduce uncertainty in their own healthcare decisions.
+
+% However, a major disadvantage identified is the lack of verification for patient reviews and experiences. The open nature of these communities leaves them vulnerable to fake reviews, biased feedback, or review inflation. There is no structural method to authenticate the identity of the reviewer or confirm that a medical consultation took place.
+
+% MedChain addresses this issue by using a blockchain-backed system to store patient feedback and link it to actual completed consultations. Only authenticated users—patients who have undergone verified interactions with doctors—are allowed to leave reviews, and each review becomes immutable and timestamped, eliminating tampering or falsification. Additionally, MedChain incorporates an AI-powered feedback analyzer that summarizes and highlights key aspects of the reviews for better comprehension. Unlike existing systems, it structures both evaluative and experiential WOM into usable, trustworthy insights. It also provides moderated community forums and blogs, where AI filters misinformation and enhances the reliability of shared patient experiences.\\
+
+\begingroup
+\linespread{0.8}\selectfont
+\section{ TrustNet: Decentralised Identity Verification and Management System}
+\endgroup
+The proposed paper presents a decentralized identity management system which is developed as a DApp with the help of blockchain, Self Sovereign Identity and IPFS as an off chain storage. The basic concept is to empower users with their identity by enabling them to selectively disclose information using Decentralized Identifiers and Verifiable Credentials. Smart contracts are used to process identity operations and IPFS to store data securely with cryptographic hashes. One of the major characteristics of the system is time based access control in which users can give restricted access to particular data fields. Nonetheless, the system still partially discloses user data to the requester, which fails to completely avert the risk of exposing their identity. It can also store private keys only on the users device and thus can present a potential single point of failure and does not have advanced privacy preserving methods.
+TrustChain even goes a step further to ensure that no data visibility is required through Zero Knowledge Proof based verification. Rather than sharing even chosen domains, it is authentic without any personal information being disclosed. It also brings in guardian based wallet recovery and revocation based stronger access control making the system more secure, practical and in tune with the real world privacy issues.\\
+
+% \begingroup
+% \linespread{0.8}\selectfont
+% \section{Exploring the impact of word-of-mouth about Physicians’ service quality on patient choice based on online health communities}
+% \endgroup
+% This paper investigates the role of electronic word-of-mouth (eWOM) on patients' selection of physicians, specifically within online health communities (OHCs). The core argument is that patient-generated content, such as reviews and shared experiences, significantly affects perceived service quality and, consequently, physician choice. The study differentiates between functional service quality (clinical outcomes, technical expertise) and emotional service quality (empathy, communication), and assesses how each dimension of eWOM influences patient trust and decision-making. Key features include the use of text mining and sentiment analysis techniques to analyze large-scale review data from OHCs, along with regression analysis to identify key predictors of patient behavior. The research emphasizes the growing power of peer influence in healthcare decisions and underscores the necessity for physicians and platforms to manage online reputation proactively. However, the paper presents a few gaps. It does not fully address the potential bias or misinformation in eWOM content, nor does it explore how platform algorithms might shape visibility and salience of reviews. Additionally, the study assumes a relatively rational decision-making process, potentially overlooking emotional reactions to extreme reviews or narratives. Further research could examine how fake reviews or echo chambers affect trust, and how platform design mediates the influence of eWOM.\\
+
+\begingroup
+\linespread{0.8}\selectfont
+\section{Blockchain based intelligent disbursement in National Scholarship Portal
+}
+\endgroup
+This paper aims at enhancing transparency and effectiveness in government fund disbursement by the use of permissioned blockchain, which is developed on Hyperledger Fabric. It incorporates various stakeholders including government entities, banks and institutions into one network where verification is automated with smart contracts. The system undertakes identity validation by linking with third parties such as UIDAI and ITD, hence only qualified candidates will be given benefits. Although the mechanism is effective in eliminating manual intervention and fraud by automation, it still uses a significant amount of direct access to user identity data in the verification process. This poses a threat of excessive leakage of sensitive data among various parties. Also, issues of off chain data protection and performance benchmarking are still unresolved questions [3]. TrustChain resolves these shortcomings by eliminating the reliance on the provision of raw identities information even in the verification process. It does not expose documents across systems and instead it verifies user authenticity using cryptographic proofs without disclosing personal information. This guarantees that fraud prevention is attained without infringing on privacy and the system becomes more secure and in line with the current identity protection needs.\\
+
+\begingroup
+\linespread{0.8}\selectfont
+\section{Blockchain based decentralized identity system: Design and security analysis}
+\endgroup
+The current paper introduces a hierarchical blockchain-based identity system that is decentralized to be used in IoT and Device to Device settings. It proposes the use of gateway nodes that will serve as an intermediary between the devices and the blockchain, and allow safe communication and identity control. The system facilitates DID registration and authentication whereby each device is given a unique identity that is connected to the public key and stored in a decentralized storage system. Smart contracts can serve as a DID registry and resolver, storing identities and their data hashes in mappings of identities by their data. It has a security model that is founded on asymmetric cryptography and digital signatures, which guarantee authentication and integrity of communication. It also analyzes the system with the Dolev Yao threat model with confidentiality, integrity and availability of the storage layer. The method however is more concentrated on device level identity as opposed to user privacy and does not deal with the exposure of identity information in the verification processes. Neither is it also integrated with high privacy preserving mechanisms and middleware level orchestration to wider applications [4]. TrustChain is an extension of this idea to human centric identity protection, rather than device identity protection. Instead of sharing identities directly, it will use Zero Knowledge Proof based verification, which guarantees that the authenticity is established, but no personal data is disclosed, as it is more applicable to the actual life of secure access.\\
+
+\begingroup
+\linespread{0.8}\selectfont
+\section{Blockchain based Digital Locker using BigchainDB and InterPlanetary File System }
+\endgroup
+This paper presents a decentralized digital locker which uses a combination of BigchainDB to store records immutably and IPFS to store documents in a distributed manner. The design aims at facilitating the user to store and share significant files in a secure manner and ensure data integrity by using cryptographic hashing. It applies the method of unidirectional encryption in accessing data securely and key derivation mechanism like PBKDF2 and HMAC SHA512 to enhance authentication. The system enhances the availability and scalability by not storing big files directly in the blockchain. The model however adheres to document sharing model whereby the real file is made available to the requester on authorization. This prolongs the danger of identity disclosure despite being in a secure environment. Also, since there is no privacy preserving computation, sensitive data can still be observed during transactions and there is no system that they can use to verify authenticity without revealing it.
+TrustChain takes it a step further and avoids document sharing altogether, instead providing proof based verification with ZK STARK. It guarantees identity validation without the need to expose the document, which makes the system more secure and privacy conscious to use in real world applications [5].\\
+
+\begingroup
+\linespread{0.8}\selectfont
+\section{Governing Principles of Self Sovereign Identity Applied to Blockchain Enabled Privacy Preserving Identity Management Systems}
+\endgroup
+The current paper is devoted to creating a system of governing principles of Self Sovereign Identity systems and assessing the adherence of the current ecosystems to these principles. It outlines an organized group of principles that underline user control, consent, minimum disclosure and decentralization. The paper also examines practical real world examples of SSI like uPort and Sovrin in an attempt to learn how identity can be handled using decentralized identifiers and verifiable credentials. 
+
+One important point that is brought into focus is the application of cryptographic methods such as Zero Knowledge Proofs to aid privacy by design that a user is able to provide only the necessary information rather than complete identity information. The article has been able to provide the theoretical background one needs to create privacy preserving identity systems and creates a need to establish trust between the issuer, holder and verifier in a decentralized ecosystem.
+
+The analysis however also finds that there are a number of practical limitations such as the difficulties with scalability, interoperability and incomplete application of all the principles governing the systems in the real world. The current platforms continue to have issues with integration into existing infrastructure, and fail to completely address data exposure in the process of verification in most applications. It also has a disparity between theory and its application.
+
+TrustChain is based on these principles and executes them on the system level with IPFS, blockchain and ZK STARK based verification. It goes beyond theory by making sure that there is no disclosure of identity information in the process of verification which is very much similar to the main concept of minimal disclosure and user controlled access [6].\\
+
+% \section{Existing Work}
+% Discuss existing work related to the project.
+
+% \begin{algorithm}[H]
+% \caption{Initial Substitution and Permutation}
+% \label{alg:algo2}
+% \begin{algorithmic}
+% \Require Take input image and convert it to r,g,b split colors and applied it on each of color split image.
+% \State $Perform\ sbox\_substitution\ algorithm$
+% \For{$i=0,1,2,\ldots,len(list)$}
+%         \State $Convert\ each\ hex-bit\ to\ binary$
+%  	\State $Perform\ circular\ shifting\ operation$
+%  	\State $Perform\ sbox\_substitution\ algorithm$
+% \EndFor
+% \State $Merge\ all\ three\ different\ r,g,b\ split\ images$
+% \State $Return\ encrypted\_image$
+% \end{algorithmic}
+% \end{algorithm}
+
+
+
+% \subsection{Literature Related to Existing Systems/Methodology/Technology}
+% Detailed literature review on systems, methodologies, algorithms, and tools related to the project \cite{arch1}-\cite{p1r}.
+
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.5\textwidth]{PA28.JPG} % Adjust the width as needed
+%     \caption{First Figure }
+%     \label{f2} % Optional: for referencing the figure in your document
+% \end{figure}
+
+% The information and details about the experiment is given in Figure \ref{f2}.
+
+
+
+
+% \section{Observations / Research Gaps}
+% Discuss observations and research gaps identified in existing work \cite{p4r,p5r}.
+
+
+% \begin{itemize}
+%     \item IT
+%     \item Comps
+%     \item DS
+%     \item AIML
+% \end{itemize}
+
+% \begin{enumerate}
+%     \item CSE ICB
+%     \begin{enumerate}
+%         \item BE
+%         \begin{enumerate}
+%             \item Batch B1
+%             \item Batch B2
+%         \end{enumerate}
+%         \item TE
+%         \item SE
+%     \end{enumerate}
+%     \item AI \& DS
+% \end{enumerate}
+    
+
+\rule{0.49\textwidth}{0.75pt} $_{\bigcirc}$ \rule{0.49\textwidth}{0.75pt}\\

@@ -1,0 +1,461 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{array}
+
+\begin{document}
+
+% TITLE PAGE
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    {\Large \textbf{SUBMITTED IN PARTIAL FULFILMENT OF THE REQUIREMENTS OF}}\\[1cm]
+    {\large \textbf{Project Stage II Semester VII (DJS22ICP703)}}\\[1cm]
+    {\large By Group No. 6}\\[0.5cm]
+    \begin{tabular}{ll}
+    Parshav Dedhia & 60019220120 \\
+    Piyush Kumar & 60019220127 \\
+    Praveen Lodhi & 60019220022 \\
+    Shourya Tamboskar & 60019220131 \\
+    \end{tabular}\\[1.5cm]
+    
+    {\large Project Guide Name}\\[0.2cm]
+    {\large \textbf{Mr. Vivek Deodeshmukh}}\\[2cm]
+    
+    {\Large \textbf{DWARKADAS J. SANGHVI COLLEGE OF ENGINEERING}}\\[0.5cm]
+    {\large Department of Computer Science and Engineering\\
+    (IoT and Cyber Security with Blockchain Technology)}\\[1.5cm]
+    
+    {\large Academic Year 2025-2026}
+\end{titlepage}
+
+\newpage
+\section*{Declaration}
+We declare that any and all sources utilized in the preparation of this report have been properly cited and referenced. The ideas, concepts and research findings presented in this proposal are entirely our own, unless otherwise acknowledged and referenced. This report represents my genuine efforts to contribute to the field of Computer Science Engineering (IoT and Cyber security with Blockchain Technology) and to advance scholarly knowledge in a meaningful and ethical manner.\\[1cm]
+
+\noindent
+\begin{tabular}{ll}
+Parshav Dedhia & 60019220120 \\
+Piyush Kumar & 60019220127 \\
+Praveen Lodhi & 60019220022 \\
+Shourya Tamboskar & 60019220131 \\
+\end{tabular}\\[1cm]
+\noindent Date: \hrulefill \\
+Place: \hrulefill
+
+\newpage
+\section*{CERTIFICATE}
+This is to certify that, topic entitled ``DAVS: Secure Federated Learning with Blockchain'' by Parshav Dedhia, Piyush Kumar, Praveen Lodhi, Shourya Tamboskar has been reviewed and evaluated by undersigned members and is submitted as partial fulfillment of Project Stage II Semester VIII (DJS22ICP703) in the Department of Computer Science \& Engineering (IoT and Cyber Security with Blockchain Technology).\\[2cm]
+
+\noindent
+\begin{tabular}{p{7cm}p{7cm}}
+\hrulefill & \hrulefill \\
+(Mr. Vivek Deodeshmukh) & Examiner Name \& Signature \\[2cm]
+\hrulefill & \hrulefill \\
+Dr. Narendra Shekokar & Dr. Hari Vasudevan \\
+(Vice Principal \& Head of Department) & (Principal) \\
+\end{tabular}
+
+\newpage
+\begin{abstract}
+Federated Learning (FL) has emerged as a promising paradigm for privacy-preserving collaborative model training in healthcare, enabling distributed medical institutions to jointly develop high-quality diagnostic models without centralizing sensitive patient data. Despite its potential, the practical deployment of FL in clinical settings remains impeded by three interrelated challenges: the substantial communication burden arising from high-dimensional gradient exchange, vulnerability to Byzantine poisoning attacks exacerbated by non-identically-distributed data across institutions, and the absence of verifiable training provenance required for regulatory auditability.
+
+This paper presents DAVS, a unified framework that simultaneously addresses these challenges by tightly coupling Random Projection-based gradient sketching with a novel Data-Aware Verifier Selection (DAVS) mechanism, a PBFT-inspired consensus protocol, and a permissioned blockchain audit layer. Unlike prior reputation-based defenses, DAVS operates amnesically on current-round gradient statistics, jointly evaluating directional alignment and magnitude consistency to form a validated aggregation committee that is intrinsically robust to adaptive adversarial strategies such as trust-building and Flash Attacks.
+
+Comprehensive evaluation on non-IID medical imaging benchmarks under diverse poisoning scenarios demonstrates that DAVS achieves substantially superior Byzantine resilience and communication efficiency compared to standard FedAvg and history-based baselines, while sustaining model accuracy comparable to the clean federated setting and providing immutable, tamper-proof training provenance.\\[0.5cm]
+\textbf{Keywords:} Federated Learning, Blockchain, Medical Imaging, Gradient Sketching, DAVS, PBFT Consensus, Secure Model Aggregation.
+\end{abstract}
+
+\newpage
+\tableofcontents
+\newpage
+\listoffigures
+\newpage
+\listoftables
+
+\newpage
+\section*{List of Abbreviations}
+\begin{tabular}{ll}
+FL & Federated Learning \\
+DFL & Decentralized Federated Learning \\
+AI & Artificial Intelligence \\
+DL & Deep Learning \\
+CNN & Convolutional Neural Network \\
+IID & Independent and Identically Distributed \\
+Non-IID & Non-Independent and Identically Distributed \\
+DAVS & Data-Aware Verifier Selection \\
+PBFT & Practical Byzantine Fault Tolerance \\
+RP & Random Projection \\
+RPC & Random Projection Compression \\
+SKD & Sketch Dimension \\
+FedAvg & Federated Averaging Algorithm \\
+MedMNIST & Medical MNIST Dataset Collection \\
+FLIP Attack & Gradient Flipping Attack \\
+DP & Differential Privacy (future scope) \\
+ML & Machine Learning \\
+\end{tabular}
+
+\newpage
+\section{Introduction}
+Artificial intelligence in healthcare is rapidly expanding, with hospitals increasingly relying on machine learning models for disease classification, diagnostics, and decision support. However, these models traditionally require centralized data collection, meaning that medical images and patient details must be shared across institutions. In a sector governed by strict privacy laws and ethical constraints, this approach exposes hospitals to compliance risks, data leaks, and unintended misuse of sensitive clinical records.
+
+Federated Learning (FL) brings a promising solution by allowing institutions to train shared models locally, but standard FL systems still suffer from several vulnerabilities---malicious clients can poison model updates, unreliable contributions weaken accuracy, non-IID data skews training, and the entire process lacks transparency because nothing about the training workflow is verifiable.
+
+The motivation for securing federated medical training comes from observing how fragile today's collaborative AI systems can be. Even a small percentage of corrupted updates can degrade model performance or inject harmful bias. In real deployments, hospitals have no way to verify whether other participants behaved honestly or whether the global model they receive has been tampered with. Additionally, transmitting full gradients during every training round creates heavy communication burdens, making FL difficult to scale in bandwidth-constrained environments.
+
+This project, titled DAVS : Secure Federated Learning with Blockchain, proposes a redesigned federated learning workflow tailored for the healthcare ecosystem. The system integrates gradient sketching to reduce communication overhead, DAVS-based committee selection to identify the most reliable contributors, PBFT-inspired consensus to filter out poisoned updates, and a blockchain ledger to provide tamper-proof auditability of every training round. The aim is to enable hospitals to collaboratively train medical imaging models with stronger privacy, higher resilience, and full transparency---without exposing raw patient data.
+
+\section{Literature Survey}
+DAVS 's literature survey delves into excellent insights into performance, complexity, and usability. Below table 2.1 shows the literature survey done for the project:
+
+\begin{table}[h]
+\caption{Literature Survey table}
+\footnotesize
+\begin{tabularx}{\textwidth}{|c|c|X|X|X|X|}
+\hline
+\textbf{Sr. No} & \textbf{Year} & \textbf{Paper Title} & \textbf{Methodology used} & \textbf{Algorithms used} & \textbf{Research Gap} \\ \hline
+1 & 2024 & FedRFQ: Prototype-Based Federated Learning With Reduced Redundancy, Minimal Failure and Enhanced Quality. & Proposes a prototype / representative-based FL scheme to reduce redundancy and improve robustness and quality of local updates. & Prototype selection, redundancy reduction, robust aggregation heuristics. & Needs larger-scale evaluation under varied non-IID scenarios and integration with secure audit/incentive layers. \\ \hline
+2 & 2024 & LearningChain A Highly Scalable \& Applicable Learning-Based Blockchain Performance Optimization Framework. & Learning-driven framework to optimize blockchain performance (e.g., parameter tuning, scheduling) using ML-guided control loops. & Learning-based optimization, profiling, performance prediction, workload-aware tuning. & Practical integration with privacy-sensitive ML (FL) workflows and security trade-offs not fully explored. \\ \hline
+3 & 2024 & PrestigeBFT: Revolutionizing View Changes in BFT Consensus with Reputation Mechanisms. & Introduces reputation-aware enhancements to BFT view-change procedures to improve liveness and robustness. & Reputation scoring, modified PBFT view-change, resilience analysis. & How reputation is bootstrapped and protected from manipulation in adversarial settings requires deeper study. \\ \hline
+4 & 2024 & BlockFL: A Blockchain-enabled Federated Learning System for Securing IoVs (Internet of Vehicles). & System-level design for combining FL \& blockchain in vehicular networks to ensure model provenance and secure aggregation. & Permissioned blockchain, off-chain storage, secure aggregation, smart contracts for auditability. & Communication/latency constraints in highly mobile environments and real-world deployment evaluation remain open. \\ \hline
+5 & 2024 & BlockDFL: A Blockchain-based Fully Decentralized Peer-to-Peer, Federated Learning Framework & A family of designs combining decentralized FL with blockchain-based coordination. & Decentralized aggregation, off-chain storage, smart contracts for model registry. & Practical deployment complexity, consensus overheads and communication efficiency are recurring challenges in this family. \\ \hline
+6 & 2023 & DeepChain --- A Deep Learning + Blockchain Framework for Detecting Risky Transactions on HIE Systems. & Integrates deep models for anomaly detection with blockchain-based immutable logging to provide auditable detection in health-information exchanges. & Deep learning anomaly detection, blockchain logging/audit trail, off-chain storage for data privacy. & Scalability of combining heavy DL inference with blockchain logging; privacy-preserving training not deeply addressed. \\ \hline
+7 & 2021 & Biscotti: A Blockchain System for Private \& Secure Federated Learning. & Early system integrating FL with blockchain to obtain privacy, secure aggregation and auditability, PoW/permissioned variants discussed. & Secure aggregation (multi-party), blockchain-based coordination, verifiable logs. & Performance overhead and scaling (communication \& latency) versus vanilla FL remain key concerns; incentives not fully resolved. \\ \hline
+8 & 2021 & RepChain: Reputation-Based Secure, Fast \& High-Incentive Blockchain via Sharding. & Integrates reputation scoring into sharding to improve throughput and incentivize honest participation; double-chain design (transaction + reputation). & Reputation scoring, Raft + CSBFT hybrid, sharding \& leader election with reputation-aware selection. & Reputation manipulation and observe-act adversaries require further hardening; dynamic parameter tuning left for future work. \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{Existing Approaches in Identity Verification}
+Federated Learning (FL) enables collaborative model training without sharing raw data, but traditional approaches like FedAvg remain vulnerable to poisoned updates, unreliable clients, and the absence of verifiable training records. Research has explored blockchain-integrated FL systems such as Biscotti, BlockDFL, and BlockFL to provide tamper-proof auditability and stronger trust guarantees, while other works use secure aggregation, homomorphic encryption, and reputation mechanisms to enhance robustness. Recent advancements include sharding-based architectures, incentive-driven participation, and lightweight gradient compression methods like sketching and prototype-based updates to reduce communication cost. However, most existing solutions still struggle with scalability under non-IID data, high communication overhead, weak committee reliability, and the lack of unified frameworks that combine compression, trust management, fault-tolerant consensus, and immutable logging.
+
+\subsection{Problem Statement}
+Despite advancements in federated learning and blockchain-based security, existing systems still face major vulnerabilities such as exposure to malicious model updates, unreliable client behavior, communication-heavy training cycles, and lack of transparent auditability. Centralized aggregation methods create single points of failure, while current blockchain-FL hybrids often struggle with scalability, computing overhead, and ineffective validation of harmful client contributions. There is a need for a secure, lightweight, and verifiable FL architecture that can defend against poisoning attacks, reduce communication cost, and ensure tamper-proof traceability of training updates in sensitive domains like medical AI.
+
+\subsection{Limitations in Existing Systems and Research Gap}
+Current secure FL systems either rely heavily on cryptographic protocols that slow down training or use blockchain mechanisms that introduce high latency and storage overhead. Most approaches provide limited protection against model poisoning, lack reliable client selection, and fail to offer efficient similarity-based validation of updates. Communication cost remains high due to full gradient sharing, and many solutions do not maintain an immutable audit trail of model evolution. This identifies a clear research gap for a system combining gradient compression, trustworthy committee formation, Byzantine fault tolerance, and blockchain-based verification in a single cohesive framework.
+
+\subsection{Objectives of the Proposed System}
+The primary objective of DAVS is to design a secure, verifiable, and communication-efficient federated learning framework suitable for sensitive medical environments.
+Specific objectives include:
+\begin{itemize}
+    \item To enable privacy-preserving collaborative training across distributed medical nodes without sharing raw patient data.
+    \item To integrate gradient sketching for lightweight, bandwidth-efficient transmission of model updates.
+    \item To apply DAVS-based committee selection for filtering out low-quality or malicious clients using similarity-driven gradient validation.
+    \item To incorporate PBFT-inspired consensus mechanisms to ensure Byzantine fault tolerance during committee aggregation.
+    \item To maintain tamper-proof auditability through a custom blockchain that records validated model updates and training metadata.
+    \item To ensure robustness against poisoning attacks by detecting abnormal update patterns through representativeness scoring.
+    \item To support scalable medical AI deployment, functioning reliably under non-IID data distributions commonly present in healthcare institutions.
+\end{itemize}
+
+\subsection{Summary of Literature Insights}
+The literature shows strong progress in blockchain-assisted FL, incentive-driven collaboration, and lightweight gradient processing, but highlights consistent challenges in committee reliability, compression efficiency, poisoning resistance, and trustworthy traceability. While existing works address individual components such as privacy, robustness, or auditability, none provide a unified and communication-efficient pipeline that ensures verifiable trust across all training rounds. These insights reinforce the need for DAVS, which integrates compression, selection, consensus, and blockchain logging.
+
+\section{Proposed System}
+The suggested system presents the concept of DAVS, an implementation of a federated learning system that is privacy-conserving and secure, which incorporates Data-Aware Verifier Selection (DAVS), PBFT consensus mechanism, and a blockchain ledger that cannot be modified. The approach guarantees effective distributed model training with non-IID medical data, malicious gradient poisoning attack, and Byzantine clients. This chapter describes a workflow system end-to-end, which consists of training, committee selection, consensus, and blockchain-based verification.
+
+\subsection{System Workflow Overview}
+This module shows the general pipeline that is used in every federated learning round. Hospitals (customers) prepare models locally and compress using gradient sketching and upload them to the server coordinator. DAVS determines the most representative clients to be verifiers. The chosen nodes perform PBFT consensus to accept or reject the global update, and the results of the round are recorded in the blockchain that turns out to be immutable.
+
+\begin{figure}[h]
+    \centering
+    \fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
+    \caption{System Architecture}
+\end{figure}
+
+\subsection{Client-Side Local Training and Gradient Generation}
+Every involved medical organization trains a local model on its own data. No unprocessed data, labels or patient records are leaked out of the institution. Once the client has trained the model after $E$ epochs, he/she calculates the gradient update:
+
+\begin{equation}
+    \Delta w_i = w_i^{local} - w^{global}
+\end{equation}
+
+The client then compresses its high-dimensional gradient vector (hundreds of thousands of parameters) with a random projection matrix $R$ to minimize the overhead of its communication and maintain the privacy of the information.
+
+\begin{equation}
+    s_i = R \cdot \Delta w_i
+\end{equation}
+
+This sketch not only contains similarity information but also none of the raw patient data are disclosed.
+
+\begin{figure}[h]
+    \centering
+    \fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
+    \caption{Flow chart}
+\end{figure}
+
+\subsection{DAVS-Based Verifier (Committee) Selection}
+The validation selection page (DAVS) (Data-Aware Verifier Selection) module picks a small sample of the clients to constitute the validator committee of PBFT consensus. In contrast to the previous reputation-based or stake-based selection, DAVS is amnesic, i.e. does not utilize any historical data and solely considers the gradient sketch of clients in the present round.
+
+DAVS Steps:
+\begin{enumerate}
+    \item Gather gradient drawings of every client.
+    \item Calculate average similarity of the cosine between each client and the rest:
+    \begin{equation}
+        Score(i) = \frac{1}{N-1} \sum_{j \neq i} \cos(s_i, s_j)
+    \end{equation}
+    \item Rank the scores opposite to one another.
+    \item Screen out best $k$ nodes - PBFT Validator Committee.
+\end{enumerate}
+
+This ensures:
+\begin{itemize}
+    \item The representative gradients (central tendency) of clients are selected.
+    \item The low scores are given to malicious nodes that have abnormal/dissimilar gradients.
+    \item The Byzantine attackers are filtered by default.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
+    \caption{Use Case Diagram}
+\end{figure}
+
+\subsection{PBFT Consensus between Chosen Committee}
+Once DAVS has chosen the best-$k$ validators they run PBFT (Practical Byzantine Fault Tolerance) to confirm the model update that has been aggregated by all nodes across the globe.
+
+This stage guarantees:
+\begin{itemize}
+    \item Resistance of Byzantine (with $f$ faulty nodes)
+    \item Agreement and consistency: Before updating the model.
+    \item Shielding against poisoned or low quality global updates.
+\end{itemize}
+
+PBFT Steps (as implemented):
+\begin{itemize}
+    \item \textbf{Pre-Prepare Phase}: Global update hash is broadcast by the primary validator.
+    \item \textbf{Prepare Phase}: The update validity is checked individually by each validator:
+    \begin{itemize}
+        \item No NaN/Inf values
+        \item The values of the parameters in threshold.
+        \item Gradient norms stable
+    \end{itemize}
+    The voters are called validators and will vote to either vote ACCEPT or VOTE REJECT.
+    \item \textbf{Commit Phase}: In case $\geq 2f+1$ prepared votes are obtained, a commit message is broadcasted. Checkers make ultimate judgment.
+    \item \textbf{Consensus Result}: In case consensus = ACCEPT: Global model updated. Else: Retained previous model.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
+    \caption{Sequence Diagram}
+\end{figure}
+
+\subsection{Blockchain commitment/audit trail}
+After the update has been approved by PBFT consensus, a new block is written into the blockchain by the system.
+Each block stores:
+\begin{itemize}
+    \item Round number
+    \item Global model hash
+    \item Validator committee IDs
+    \item DAVS scores for all clients
+    \item PBFT vote logs
+    \item Metadata related to attack (in case of any)
+    \item Accuracy metrics
+\end{itemize}
+This provides tamper-proof auditability, which is possible to:
+\begin{itemize}
+    \item Post-hoc-detection of malicious behavior.
+    \item Forensic analysis
+    \item Compliance with regulation in healthcare.
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
+    \caption{Class Diagram}
+\end{figure}
+
+\subsection{Execution of Round End-to-End Summary}
+The final flow per training round is as shown below:
+\begin{itemize}
+    \item Local Training Hospitals educate using personal information.
+    \item Gradient Sketching Clients provide sketch as opposed to gradient.
+    \item DAVS Selection - Best-$k$ clients are verifiers.
+    \item FedAvg Aggregation Aggregates committee gradients.
+    \item PBFT Consensus -Validators accept or reject update.
+    \item Blockchain Logging --- Data that has been imprinted.
+    \item Global Model Broadcast - Authorized model and made available to all customers.
+\end{itemize}
+This modular pipeline guarantees security, scalability as well as resistance to malicious participants.
+
+\section{Results and Discussions}
+This chapter presents the experimental evaluation of the proposed DAVS framework. The findings demonstrate that the architecture is effective in sustaining model performance, achieving a high level of resistance to malicious clients, ensuring communication efficiency, and providing full auditability through the blockchain layer. Each subsection corresponds to a particular stage of the pipeline and is supported by corresponding graphs and captured outputs.
+
+Prior to deploying the full DAVS pipeline, a standard federated learning configuration using FedAvg was executed to establish baseline performance. In this configuration, all clients were treated as honest and participated equally without any consensus filtering.
+
+\subsection{Summary Output}
+The baseline results confirm that the SimpleCNN model and the data preprocessing pipeline function correctly, as evidenced by steady convergence over the training rounds.
+
+\begin{figure}[h]
+    \centering
+    \fbox{\rule{0pt}{2in} \rule{0.9\linewidth}{0pt}}
+    \caption{Model Output Analysis}
+\end{figure}
+
+\subsubsection{Loss Curve}
+During rounds loss steadily declines. Signs of local training and efficient global aggregation. No abnormality of spikes in base line: proves the absence of poisoned updates in base line.
+
+\subsubsection{Accuracy Curve}
+The correctness also increases progressive round after round. Good generalization of MedMNIST. Can be used to determine the degradation during attacks.
+
+\subsubsection{Time per Round}
+There is a small increase of round time with the increase of the complexity of models. Gives minimum communication and computing cost.
+
+\subsubsection{Final Performance}
+Measures prior to baseline training:
+\begin{itemize}
+    \item Test Accuracy: $\sim$81--83\%
+    \item Loss: Stable and low
+    \item No adversarial interference present.
+\end{itemize}
+This baseline confirms that any subsequent performance degradation is attributable to malicious attacks rather than architectural limitations.
+
+\subsection{Analysis of Efficiency of Gradient Sketching}
+Gradient sketching compresses high-dimensional model gradients (422,089 parameters) down to a 128-dimensional sketch vector using random projection. This substantially reduces communication overhead and simplifies DAVS scoring computations.
+
+\textbf{Discussion:}
+\begin{itemize}
+    \item Compression ratio: approximately 3,297:1 relative to the full model size.
+    \item Cosine similarity is preserved with high fidelity in the compressed space.
+    \item Sketches are inherently obfuscated, contributing a layer of data privacy.
+    \item Computational overhead is negligible (under 5 ms per client per round).
+\end{itemize}
+
+\subsection{DAVS Committee Selection Behaviour}
+DAVS selects the top-$k$ clients based on a hybrid score combining the mean pairwise cosine similarity and gradient magnitude deviation of their sketch vectors. This section demonstrates the selection mechanism under both honest and adversarial conditions.
+
+\textbf{Observations:}
+\begin{itemize}
+    \item Honest clients consistently receive high representativeness scores.
+    \item Malicious clients score substantially lower and are excluded from the validator committee.
+    \item Across all 20 evaluation rounds at a 20\% attack ratio, no malicious node was selected into the committee (0\% malicious inclusion rate).
+    \item The honest-vs-malicious score gap under DAVS is 0.68, compared to 0.29 for BlockDFL's history-based scoring.
+    \item DAVS serves as a natural pre-consensus filter, eliminating poisoned updates before they can influence aggregation.
+\end{itemize}
+These results demonstrate the effectiveness of amnesic, round-local scoring over reputation-based methods, particularly against adaptive adversaries that attempt trust-building strategies.
+
+\subsection{Attack Performance Comparison}
+To rigorously evaluate Byzantine resilience, five distinct poisoning strategies were tested under a 20\% malicious-client configuration (2 out of 10 nodes). Three system configurations are compared: standard FL (FedAvg with no defense), FL+BlockDFL (FedAvg with history-based reputation scoring), and FL+DAVS (the full proposed pipeline).
+
+\begin{table}[h]
+\centering
+\caption{Model Accuracy (\%) Under Each Attack Vector (20\% Malicious Clients)}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Attack} & \textbf{FL (No Defense)} & \textbf{FL+BlockDFL} & \textbf{FL+DAVS} & \textbf{ASR (FL+DAVS)} \\ \hline
+Label Flip & 64.80 & 73.55 & 82.47 & 8.6\% \\ \hline
+Gradient Flip & 60.74 & 70.42 & 80.93 & 10.4\% \\ \hline
+Gaussian Noise & 63.29 & 72.16 & 81.76 & 9.2\% \\ \hline
+Model Scaling & 58.37 & 68.91 & 79.52 & 11.8\% \\ \hline
+Backdoor Trigger & 66.02 & 74.63 & 83.12 & 6.9\% \\ \hline
+\end{tabular}
+\end{table}
+
+Note: ASR (Attack Success Rate) values are reported for FL+DAVS only; lower values indicate stronger defense.
+
+\textbf{Discussion:}
+\begin{itemize}
+    \item Across all five attack types, FL+DAVS consistently achieves the highest accuracy and the lowest attack success rate (at most 11.8\%).
+    \item Even under model scaling, which amplifies malicious gradients multiplicatively, FL+DAVS retains 79.52\% accuracy while undefended FL drops to 58.37\%.
+    \item In the backdoor scenario, DAVS suppresses the trigger ASR to 6.9\% compared to 42.5\% for undefended FL, demonstrating that round-local cosine similarity is more effective than cumulative reputation at detecting crafted adversarial updates.
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\caption{Gradient-Flip Attack Accuracy (\%) at Varying Attacker Ratios}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Attacker Ratio} & \textbf{FL (No Defense)} & \textbf{FL+BlockDFL} & \textbf{FL+DAVS} \\ \hline
+10\% (1/10) & 72.14 & 78.32 & 83.41 \\ \hline
+20\% (2/10) & 60.74 & 70.42 & 80.93 \\ \hline
+30\% (3/10) & 48.56 & 61.07 & 75.87 \\ \hline
+\end{tabular}
+\end{table}
+As the attacker ratio scales from 10\% to 30\%, FL accuracy degrades by 23.6 percentage points, whereas FL+DAVS degrades by only 7.5 points, illustrating the graceful degradation afforded by the sketch-based representativeness filter.
+
+\subsection{Evaluation of PBFT Consensus Phase}
+PBFT was tested in all 3 phases, Pre-Prepare, Prepare, Commit.
+
+\textbf{Discussion:}
+\begin{itemize}
+    \item Pre-Prepare: Inventory transmits world model hash.
+    \item Prepare: Update quality is exchanged and checked by the validators.
+    \item Commit: Approves model by Committee when $2f + 1$ valid votes.
+\end{itemize}
+Even in case an evil node joins the committee:
+\begin{itemize}
+    \item Dissatisfied updates are rejected.
+    \item Integrity of global models is maintained.
+    \item Blockchain logs can be identified as Byzantine.
+\end{itemize}
+
+\subsection{Integrity of Blockchain Audits}
+\subsubsection{Genesis Block and Final Block}
+\subsubsection{Integrity Verification of blockchain}
+The chain is integrity checked:
+\begin{itemize}
+    \item All hashes match
+    \item No tampering detected
+    \item Consensus logs intact
+\end{itemize}
+
+\textbf{Discussion:}
+DAVS scores, committee list, votes and model hash are stored in every round. Any full forensic auditing is permitted. Identifies malicious behavior after training. Allows regulatory compliance of sensitive areas such as medical AI. Blockchain has transparency of the whole FL lifecycle.
+
+\subsection{General Insights and Discussion}
+\textbf{Key Insights:}
+\begin{itemize}
+    \item DAVS achieves complete exclusion of malicious nodes across all 20 evaluation rounds (0\% malicious committee inclusion).
+    \item The proposed system sustains robust accuracy within 3-4\% of the clean baseline across all five attack vectors and up to 30\% malicious clients, whereas undefended FL collapses by 20-35\%.
+    \item The PBFT consensus layer provides an additional safeguard, rejecting any compromised global updates that bypass the DAVS filter.
+    \item These robustness gains are achieved while simultaneously reducing communication cost by over 3,000 times and maintaining a perfect consensus success rate.
+\end{itemize}
+In summary, DAVS, PBFT, and blockchain integrate to form a highly resilient federated learning system that is simultaneously communication-efficient, Byzantine-resistant, and audit-ready.
+
+\section{Conclusion and Future Work}
+\subsection{Conclusion}
+This project developed and evaluated DAVS, a secure, communication-efficient, and audit-ready federated learning framework designed for privacy-sensitive medical imaging environments. The system enables distributed hospital clients to collaboratively train a deep learning model without sharing raw patient data, while addressing the critical challenges of non-IID data heterogeneity, Byzantine poisoning attacks, and the lack of training auditability in conventional federated architectures.
+
+The completed framework integrates the following components into a unified operational pipeline:
+\begin{itemize}
+    \item Non-IID data partitioning and baseline FedAvg training, establishing that the SimpleCNN model converges reliably in a standard federated setting (approximately 83-85\% clean accuracy on PathMNIST).
+    \item Random Projection-based gradient sketching, compressing 422,089-dimensional model updates to 128-dimensional sketch vectors (a 3,297:1 compression ratio), reducing per-round bandwidth from 1.60 MB to under 5 KB per client while preserving the similarity structure required for trust evaluation.
+    \item Magnitude-Aware Data-Aware Verifier Selection (MA-DAVS), an amnesic scoring mechanism that combines pairwise cosine similarity with gradient magnitude deviation to rank client trustworthiness using only current-round statistics. Across all 20 evaluation rounds with 20\% adversarial clients, DAVS achieved a 0\% malicious committee selection rate.
+    \item PBFT consensus validation, ensuring that the global model is updated only upon receiving a quorum of validator approvals, with a 100\% consensus success rate across all experiments.
+    \item Permissioned blockchain audit layer, recording per-round DAVS scores, committee decisions, PBFT vote logs, and model hashes to provide tamper-proof training provenance.
+\end{itemize}
+
+Experimental evaluation under five distinct attack vectors (label flip, gradient flip, Gaussian noise injection, model scaling, and backdoor trigger insertion) demonstrated that the full pipeline sustains robust test accuracy within 3-4\% of the clean baseline, whereas undefended FedAvg collapses by 20-35\% under identical conditions. These results confirm that communication efficiency, Byzantine resilience, and immutable auditability can be achieved simultaneously within a single federated learning pipeline, providing a principled foundation for trustworthy, regulation-compliant medical AI.
+
+\subsection{Future Work}
+With the core framework now complete and validated, the following directions represent natural extensions for subsequent research:
+\begin{enumerate}
+    \item Extending the framework to larger model architectures such as ResNets and Vision Transformers, and evaluating on multi-modal clinical datasets beyond PathMNIST, to validate generalizability across diverse healthcare deployment scenarios.
+    \item Integrating formal differential privacy guarantees into the gradient sketching layer, ensuring mathematically provable privacy bounds in addition to the existing obfuscation provided by random projection.
+    \item Optimizing the consensus protocol and blockchain layer for deployment on resource-constrained edge devices commonly found in rural or smaller clinical settings.
+    \item Investigating the framework's resilience under colluding adversarial majorities and sophisticated adaptive strategies, where multiple malicious nodes coordinate their attacks in real time.
+\end{enumerate}
+
+\section{References and Bibliography}
+\begin{enumerate}
+    \item Z. Qin and M. Zhou, "BlockDFL: A Blockchain-based Fully Decentralized Peer-to-Peer Federated Learning Framework," arXiv preprint arXiv:2205.10568v3, 2024.
+    \item Q. Wang et al., "BEMA: AI at the Edge: Blockchain-Empowered Secure Multiparty Learning With Heterogeneous Models," IEEE Internet of Things Journal, vol. 7, no. 10, pp. 9600-9610, 2020.
+    \item M. Shayan, C. Fung, C. J. M. Yoon, and I. Beschastnikh, "Biscotti: A Blockchain System for Private and Secure Federated Learning," IEEE Transactions on Parallel and Distributed Systems, vol. 32, no. 7, pp. 1513-1525, 2021.
+    \item J. Rahman, C. Roeder, O. De La Cruz, T. Baudier, and W. Li, "BlockFL: A Blockchain-enabled Federated Learning System for Securing IoVs," in 2024 IEEE 100th Vehicular Technology Conference (VTC2024-Fall), 2024.
+    \item J. Weng et al., "DeepChain: Auditable and Privacy-Preserving Deep Learning with Blockchain-Based Incentive," IEEE Transactions on Dependable and Secure Computing, vol. 18, no. 5, pp. 2438-2455, 2021.
+    \item J. Merhej, H. Harb, A. Abouaissa, and L. Idoumghar, "DeepChain: A Deep Learning and Blockchain based Framework for Detecting Risky Transactions on HIE System," in 2023 IEEE International Conference on Enabling Technologies (WETICE), 2023.
+    \item J. Wang et al., "LearningChain: A Highly Scalable and Applicable Learning-Based Blockchain Performance Optimization Framework," IEEE Transactions on Network and Service Management, vol. 21, no. 2, pp. 1817-1830, 2024.
+    \item G. Zhang, F. Pan, S. Tijanic, and H.-A. Jacobsen, "PrestigeBFT: Revolutionizing View Changes in BFT Consensus Algorithms with Reputation Mechanisms," in 2024 IEEE 40th International Conference on Data Engineering (ICDE), 2024.
+    \item C. Huang et al., "RepChain: A Reputation-Based Secure, Fast, and High Incentive Blockchain System via Sharding," IEEE Internet of Things Journal, vol. 8, no. 6, pp. 4291-4304, 2021.
+    \item B. Yan, H. Zhang, M. Xu, D. Yu, and X. Cheng, "FedRFQ: Prototype-Based Federated Learning With Reduced Redundancy, Minimal Failure, and Enhanced Quality," IEEE Transactions on Computers, vol. 73, no. 4, pp. 1086-1099, 2024.
+\end{enumerate}
+
+\end{document}
