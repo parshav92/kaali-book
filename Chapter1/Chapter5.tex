@@ -6,20 +6,20 @@
 
 \section{Design Diagrams}
 
-\subsection{Data Flow Diagram}
+\subsection{Sequence Diagram}
  \begin{figure}[h!]
      \centering
-     \includegraphics[width=1\textwidth]{Chapter1/DFD.png} % Adjust the width as needed
-     \caption{Data Flow Diagram}
+     \includegraphics[width=1\textwidth]{Chapter1/sequence.png} % Adjust the width as needed
+     \caption{Sequence Diagram}
      \label{f1} 
 \end{figure}
-The Data Flow Diagram for DAVS represents the end-to-end flow of information in a secure federated learning round. The primary entities are the hospital clients (local trainers), the coordinator (aggregation and orchestration), the selected validator committee (consensus), and the permissioned blockchain ledger (audit).
+The Sequence Diagram for DAVS represents the interaction between system components during a single federated learning round. The major participants involved are the Client, DAVS module, PBFT consensus layer, Aggregator, and Blockchain network. The sequence begins when each client performs local training on its private dataset and computes local gradients. Instead of sending complete gradients, the client creates a compact gradient sketch to reduce communication overhead and improve efficiency before broadcasting it to the DAVS module.
 
-The flow begins when each hospital performs local training on its private dataset and computes a model update. Instead of transmitting full gradients, the client applies Random Projection-based gradient sketching to generate a compact sketch vector. These sketches are sent to the coordinator, reducing communication overhead while preserving similarity structure needed for trust evaluation.
+After receiving the sketches, the DAVS (Data-Aware Verifier Selection) module evaluates the representativeness and consistency of participating clients. Using similarity-based scoring, DAVS identifies reliable nodes and selects the top-(k) clients as verifier committee members. These selected validators are then forwarded to the PBFT consensus layer for secure validation of model updates.
 
-Next, the coordinator executes Data-Aware Verifier Selection (DAVS) over the collected sketches. DAVS computes round-local representativeness scores using cosine similarity and magnitude consistency, ranks clients, and selects the top-\(k\) nodes as a validator committee. Low-scoring outliers are treated as suspicious and are excluded from the validation set.
+In the PBFT phase, clients submit their gradients to the validator committee. The consensus process proceeds through the Pre-Prepare, Prepare, and Commit stages, where validators verify the integrity and correctness of updates. Once the required (2f+1) consensus threshold is achieved, the validated model updates are sent to the Aggregator. The Aggregator then performs robust aggregation to generate the updated global model.
 
-The committee then performs PBFT-inspired validation on the aggregated update. Validators run deterministic quality checks (e.g., numerical validity and bounded change) and vote to accept or reject the update. If quorum is reached, the global model is updated; otherwise, the previous model is retained. Finally, the coordinator writes per-round metadata (model hash, committee IDs, DAVS scores, PBFT votes, and evaluation metrics) to the permissioned blockchain, providing immutable provenance and auditability of the full training lifecycle.
+Finally, the aggregated model information is committed to the Blockchain network. The blockchain creates a new block containing model-related metadata and appends it to the chain, ensuring immutability, transparency, and auditability of the federated learning process. After successful commitment, the updated global model is broadcast back to all participating clients, completing one secure training round in the DAVS framework.
 
 
 
@@ -30,7 +30,7 @@ The committee then performs PBFT-inspired validation on the aggregated update. V
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1\textwidth]{Chapter1/use_case_new.jpeg} % Adjust the width as needed
+    \includegraphics[width=1\textwidth]{Chapter1/use-case.png} % Adjust the width as needed
     \caption{Use Case Diagram }
     \label{f1} % Optional: for referencing the figure in your document
 \end{figure}
